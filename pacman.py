@@ -105,7 +105,6 @@ def world():
                 path.goto(x + 10, y + 10)
                 path.dot(2, 'white')
 
-
 def move():
     """Move pacman and all ghosts."""
     writer.undo()
@@ -129,23 +128,8 @@ def move():
     goto(pacman.x + 10, pacman.y + 10)
     dot(20, 'yellow')
 
-    for point, course in ghosts:
-        if valid(point + course):
-            point.move(course)
-        else:
-            options = [
-                vector(5, 0),
-                vector(-5, 0),
-                vector(0, 5),
-                vector(0, -5),
-            ]
-            plan = choice(options)
-            course.x = plan.x
-            course.y = plan.y
 
-        up()
-        goto(point.x + 10, point.y + 10)
-        dot(20, 'red')
+    smart_ghosts_move()
 
     update()
 
@@ -155,6 +139,47 @@ def move():
 
     ontimer(move, 100)
 
+def smart_ghosts_move():
+   
+    for ghost, _ in ghosts:
+       
+        direction = pacman - ghost
+        
+        if abs(direction.x) > abs(direction.y):
+            if direction.x > 0:
+                ghost_course = vector(5, 0)
+            else:
+                ghost_course = vector(-5, 0)
+        else:
+            if direction.y > 0:
+                ghost_course = vector(0, 5)
+            else:
+                ghost_course = vector(0, -5)
+
+        if valid(ghost + ghost_course):
+            ghost.move(ghost_course)
+        else:
+           
+            options = [
+                vector(5, 0),
+                vector(-5, 0),
+                vector(0, 5),
+                vector(0, -5),
+            ]
+            plan = choice(options)
+            ghost_course.x = plan.x
+            ghost_course.y = plan.y
+
+            
+            if valid(ghost + ghost_course):
+                ghost.move(ghost_course)
+
+        
+        up()
+        goto(ghost.x + 10, ghost.y + 10)
+        dot(20, 'red')
+
+    update()
 
 def change(x, y):
     """Change pacman aim if valid."""
