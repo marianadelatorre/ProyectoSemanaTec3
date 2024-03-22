@@ -142,6 +142,7 @@ def move():
 
     ontimer(move, 100)
 
+#Se creó la función que permite a los fantasmas moverse de manera mas inteligente utilizando un algoritmo de búsqueda sencill0 
 def smart_ghosts_move():
    
     for ghost, _ in ghosts:
